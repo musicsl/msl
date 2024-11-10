@@ -1,0 +1,933 @@
+********************************************************************
+stackadt array
+*********************************************************************
+class StackADT {
+    int maxSize;
+    int[] stackArray;
+    int top;
+
+    public StackADT(int maxSize) {
+        this.maxSize = maxSize;
+        this.stackArray = new int[maxSize];
+        this.top = -1; // Initialize the top of the stack to -1 (empty)
+    }
+
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    public boolean isFull() {
+        return top == maxSize - 1;
+    }
+
+    public void push(int data) {
+        if (isFull()) {
+            System.out.println("Stack is full. Cannot push " + data);
+        } else {
+            stackArray[++top] = data;
+        }
+    }
+
+    public int pop() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty. Cannot pop.");
+            return -1;
+        } else {
+			/*
+            int data = stackArray[top];
+            top--;
+            return data;
+			*/
+			return stackArray[top--];
+        }
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+            return -1;
+        } else {
+            return stackArray[top];
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+        } else {
+            System.out.print("Stack: ");
+            for (int i = top; i >= 0; i--) {
+                System.out.print(stackArray[i] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class StackADTArray {
+    public static void main(String[] args) {
+        StackADT stack = new StackADT(5);
+
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        stack.display(); // Output: Stack: 1 2 3
+
+        System.out.println("Peek: " + stack.peek()); // Output: Peek: 3
+
+        stack.pop();
+        stack.pop();
+
+        stack.display(); // Output: Stack: 1
+    }
+}
+**********************************************************************************************
+stack adt linked list
+********************************************************************************************
+class Node {
+    String data;
+    Node next;
+
+    public Node(String data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class StackADT {
+    Node top;
+
+    public StackADT() {
+        this.top = null;
+    }
+
+    public boolean isEmpty() {
+        return top == null;
+    }
+
+    public void push(String data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            top = newNode;
+        } else {
+            newNode.next = top;
+            top = newNode;
+        }
+    }
+
+    public String pop() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty");
+            return null;
+        } else {
+            String data = top.data;
+            top = top.next;
+            return data;
+        }
+    }
+
+    public String peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty");
+            return null;
+        } else {
+            return top.data;
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty");
+        } else {
+            Node current = top;
+            while (current != null) {
+                System.out.print(current.data + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class StackADTLL {
+    public static void main(String[] args) {
+        StackADT stack = new StackADT();
+
+        stack.push("Java");
+        stack.push("Python");
+        stack.push("C++");
+
+        System.out.println("Stack elements:");
+        stack.display(); // Output: C++ Python Java
+
+        System.out.println("Peek element: " + stack.peek()); // Output: Peek element: C++
+        System.out.println("Popped element: " + stack.pop()); // Output: Popped element: C++
+        
+        System.out.println("Stack elements after pop:");
+        stack.display(); // Output: Python Java
+    }
+}
+********************************************************************************************************
+balanced expression checker
+*******************************************************************************************************
+public class BalancedExpressionChecker {
+    public static boolean isBalanced(String expression) {
+        StackADT stack = new StackADT();
+
+        for (int i = 0; i < expression.length(); i++) {
+            char ch = expression.charAt(i);
+            if (ch == '(' || ch == '[' || ch == '{') {
+                stack.push(Character.toString(ch));
+            } else if (ch == ')' || ch == ']' || ch == '}') {
+                if (stack.isEmpty()) {
+                    return false; // Unmatched closing symbol
+                }
+
+                String topSymbol = stack.pop();
+                if ((ch == ')' && !topSymbol.equals("(")) ||
+                    (ch == ']' && !topSymbol.equals("[")) ||
+                    (ch == '}' && !topSymbol.equals("{"))) {
+                    return false; // Mismatched closing symbol
+                }
+            }
+        }
+
+        return stack.isEmpty(); // Check if the stack is empty at the end
+    }
+
+    public static void main(String[] args) {
+        String expression1 = "{(a + b) * [c - d]}";
+        String expression2 = "{(a + b) * [c - d]";
+        String expression3 = "{(a + b) * [c - d]})";
+
+        System.out.println(expression1 + " is balanced: " + isBalanced(expression1)); // Output: true
+        System.out.println(expression2 + " is balanced: " + isBalanced(expression2)); // Output: false
+        System.out.println(expression3 + " is balanced: " + isBalanced(expression3)); // Output: false
+    }
+}
+
+***************************************************************************************
+stack adt generic
+***************************************************************************************
+class StackADT<T> {
+    int maxSize;
+    Object[] stackArray;
+    int top;
+
+    public StackADT(int maxSize) {
+        this.maxSize = maxSize;
+        this.stackArray = new Object[maxSize];
+        this.top = -1; // Initialize the top of the stack to -1 (empty)
+    }
+
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    public boolean isFull() {
+        return top == maxSize - 1;
+    }
+
+    public void push(T data) {
+        if (isFull()) {
+            System.out.println("Stack is full. Cannot push " + data);
+        } else {
+            stackArray[++top] = data;
+        }
+    }
+
+    public T pop() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty. Cannot pop.");
+            return null;
+        } else {
+			/*
+            T data = (T) stackArray[top];
+            top--;
+            return data;
+			*/
+			return (T) stackArray[top--];
+        }
+    }
+
+    public T peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+            return null;
+        } else {
+            return (T) stackArray[top];
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+        } else {
+            System.out.print("Stack: ");
+            for (int i = top; i >= 0; i--) {
+                System.out.print(stackArray[i] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class StackADTArrayGeneric {
+    public static void main(String[] args) {
+        StackADT<Integer> stack = new StackADT<>(5);
+
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        stack.display(); // Output: Stack: 1 2 3
+
+        System.out.println("Peek: " + stack.peek()); // Output: Peek: 3
+
+        stack.pop();
+        stack.pop();
+
+        stack.display(); // Output: Stack: 1
+    }
+}
+****************************************************************************************
+reverse string 
+*****************************************************************************************
+public class StringReverser {
+    public static void reverseString(String input) {
+        int length = input.length();
+        StackADT stack = new StackADT(length); // Create a stack to hold characters
+
+        // Push each character of the input string onto the stack
+        for (int i = 0; i < length; i++) {
+            char ch = input.charAt(i);
+            stack.push(ch);
+        }
+		
+		System.out.println(stack.peek());
+
+        while (!stack.isEmpty()) {            
+			System.out.print((char) stack.pop());
+        }
+    }
+
+    public static void main(String[] args) {
+        String originalString = "Hello, World!";		
+        System.out.println("Original String: " + originalString);
+		reverseString(originalString);        
+    }
+}
+********************************************************************
+queue adt 
+******************************************************************
+public class QueueADTArray {
+    String[] queueArray;
+    int front;
+    int rear;
+    int maxSize;
+
+    public QueueADTArray(int maxSize) {
+        this.maxSize = maxSize;
+        this.queueArray = new String[maxSize];
+        this.front = 0;
+        this.rear = -1;
+    }
+
+    public boolean isEmpty() {
+        return rear == -1;
+    }
+
+    public boolean isFull() {
+        return rear == maxSize - 1;
+    }
+
+    public void enQueue(String data) {
+        if (isFull()) {
+            System.out.println("Queue overflow");
+        } else {
+            queueArray[++rear] = data;
+        }
+    }
+
+    public String deQueue() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return null;
+        } else {			
+            String data = queueArray[front];
+			// Method 1 - move front
+            /* front++;
+            if (front > rear) {
+                front = 0;
+                rear = -1;
+            } */            
+			
+			// Method 2 - move rear
+			for (int i=0; i<rear; i++){
+				queueArray[i] = queueArray[i+1];
+			}
+			queueArray[rear--] = "";
+			
+			return data;
+        }
+    }
+
+    public String peek() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return null;
+        } else {
+            return queueArray[front];
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+        } else {
+            System.out.print("Queue: ");
+            for (int i = front; i <= rear; i++) {
+                System.out.print(queueArray[i] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        QueueADTArray queue = new QueueADTArray(5);
+
+        queue.enQueue("U");
+        queue.enQueue("o");
+        queue.enQueue("J");
+
+        System.out.println("Queue elements:");
+        queue.display();
+
+        System.out.println("Peek element: " + queue.peek());
+
+        queue.deQueue();
+        queue.deQueue();
+
+        queue.display();
+    }
+}
+***************************************************************************************
+queue adt linked list
+*****************************************************************************************
+class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class QueueADTLL {
+    Node front;
+    Node rear;
+
+    public QueueADTLL() {
+        this.front = null;
+        this.rear = null;
+    }
+
+    public boolean isEmpty() {
+        return front == null;
+    }
+
+    public void enQueue(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            front = newNode;
+            rear = newNode;
+        } else {
+            rear.next = newNode;
+            rear = newNode;
+        }
+    }
+
+    public int deQueue() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return -1; // Or throw an exception
+        } else {
+            int data = front.data;
+            front = front.next;
+            if (front == null) {
+                rear = null;
+            }
+            return data;
+        }
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return -1; // Or throw an exception
+        } else {
+            return front.data;
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty.");
+        } else {
+            System.out.print("Queue: ");
+            Node current = front;
+            while (current != null) {
+                System.out.print(current.data + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        QueueADTLL queue = new QueueADTLL();
+
+        queue.enQueue(1);
+        queue.enQueue(2);
+        queue.enQueue(3);
+
+        System.out.println("Queue elements:");
+        queue.display();
+
+        System.out.println("Peek element: " + queue.peek());
+
+        queue.deQueue();
+        queue.deQueue();
+
+        queue.display();
+    }
+}
+*******************************************************************************************
+circular quee 
+******************************************************************************************
+class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class CircularQueue {
+    Node rear;
+    int size;
+
+    public CircularQueue() {
+        rear = null;
+        size = 0;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public void enQueue(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            newNode.next = newNode;
+        } else {
+            newNode.next = rear.next;
+            rear.next = newNode;
+        }
+        rear = newNode;
+        size++;
+    }
+
+    public int deQueue() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return -1; // Or throw an exception
+        } else if (size == 1) {
+            int data = rear.data;
+            rear = null;
+            size--;
+            return data;
+        } else {
+            int data = rear.next.data;
+            rear.next = rear.next.next;
+            size--;
+            return data;
+        }
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return -1; // Or throw an exception
+        } else {
+            return rear.next.data;
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty.");
+        } else {
+            Node current = rear.next;
+            System.out.print("Queue: ");
+            do {
+                System.out.print(current.data + " ");
+                current = current.next;
+            } while (current != rear.next);
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        CircularQueue queue = new CircularQueue();
+
+        queue.enQueue(1);
+        queue.enQueue(2);
+        queue.enQueue(3);
+		queue.enQueue(4);
+
+        System.out.println("Queue elements:");
+        queue.display();
+
+        System.out.println("Peek element: " + queue.peek());
+
+        queue.deQueue();
+        queue.deQueue();
+		
+        queue.display();
+		queue.enQueue(8);
+        queue.enQueue(9);
+		queue.enQueue(5);
+        queue.enQueue(6);
+		queue.display();
+		
+    }
+}
+*********************************************************************************************
+generic queee adt
+************************************************************************************************
+class Node<T> {
+    T data;
+    Node<T> next;
+
+    public Node(T data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class GenericQueueADTLL<T> {
+    Node<T> front;
+    Node<T> rear;
+
+    public GenericQueueADTLL() {
+        this.front = null;
+        this.rear = null;
+    }
+
+    public boolean isEmpty() {
+        return front == null;
+    }
+
+    public void enQueue(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (isEmpty()) {
+            front = newNode;
+            rear = newNode;
+        } else {
+            rear.next = newNode;
+            rear = newNode;
+        }
+    }
+
+    public T deQueue() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return null; // Or throw an exception
+        } else {
+            T data = front.data;
+            front = front.next;
+            if (front == null) {
+                rear = null;
+            }
+            return data;
+        }
+    }
+
+    public T peek() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return null; // Or throw an exception
+        } else {
+            return front.data;
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty.");
+        } else {
+            System.out.print("Queue: ");
+            Node<T> current = front;
+            while (current != null) {
+                System.out.print(current.data + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        GenericQueueADTLL<Integer> queue = new GenericQueueADTLL<>();
+
+        queue.enQueue(1);
+        queue.enQueue(2);
+        queue.enQueue(3);
+
+        System.out.println("Queue elements:");
+        queue.display();
+
+        System.out.println("Peek element: " + queue.peek());
+
+        queue.deQueue();
+        queue.deQueue();
+
+        queue.display();
+    }
+}
+***********************************************************************
+prority queee
+***********************************************************************
+public class PriorityQueueADTArray {
+    int[] queueArray;
+    int front;
+    int rear;
+    int maxSize;
+
+    public PriorityQueueADTArray(int maxSize) {
+        this.maxSize = maxSize;
+        this.queueArray = new int[maxSize];
+        this.front = 0;
+        this.rear = -1;
+    }
+
+    public boolean isEmpty() {
+        return rear == -1;
+    }
+
+    public boolean isFull() {
+        return rear == maxSize - 1;
+    }
+
+    public void enQueue(int data) {
+        if (isFull()) {
+            System.out.println("Queue overflow");
+        } else {
+            // Find the appropriate position to insert in increasing order
+            int insertIndex = rear;
+            while (insertIndex >= front && queueArray[insertIndex] > data) {
+                queueArray[insertIndex + 1] = queueArray[insertIndex];
+                insertIndex--;
+            }
+            queueArray[insertIndex + 1] = data;
+            rear++;
+        }
+    }
+
+    public int deQueue() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return -1; // Or throw an exception
+        } else {
+            int data = queueArray[front];
+            front++;
+            if (front > rear) {
+                front = 0;
+                rear = -1;
+            }
+            return data;
+        }
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Queue underflow");
+            return -1; // Or throw an exception
+        } else {
+            return queueArray[front];
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty.");
+        } else {
+            System.out.print("Queue: ");
+            for (int i = front; i <= rear; i++) {
+                System.out.print(queueArray[i] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        PriorityQueueADTArray queue = new PriorityQueueADTArray(5);
+
+        queue.enQueue(3);
+        queue.enQueue(1);
+        queue.enQueue(4);
+		queue.enQueue(9);
+        queue.enQueue(2);
+		
+        System.out.println("Queue elements:");
+        queue.display();
+
+        System.out.println("Peek element: " + queue.peek());
+
+        queue.deQueue();
+        queue.deQueue();
+
+        queue.display();
+    }
+}
+*******************************************************************************
+queue using two stacks
+*************************************************************************************
+class StackADT {
+    int maxSize;
+    String[] stackArray;
+    int top;
+
+    public StackADT(int maxSize) {
+        this.maxSize = maxSize;
+        this.stackArray = new String[maxSize];
+        this.top = -1; // Initialize the top of the stack to -1 (empty)
+    }
+
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    public boolean isFull() {
+        return top == maxSize - 1;
+    }
+
+    public void push(String data) {
+        if (isFull()) {
+            System.out.println("Stack is full. Cannot push " + data);
+        } else {
+            stackArray[++top] = data;
+        }
+    }
+
+    public String pop() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty. Cannot pop.");
+            return null;
+        } else {
+            return stackArray[top--];
+        }
+    }
+
+    public String peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+            return null;
+        } else {
+            return stackArray[top];
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+        } else {
+            System.out.print("Stack: ");
+            for (int i = top; i >= 0; i--) {
+                System.out.print(stackArray[i] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+class QueueUsingTwoStacks {
+    private StackADT stack1;
+    private StackADT stack2;
+
+    public QueueUsingTwoStacks(int maxSize) {
+        stack1 = new StackADT(maxSize);
+        stack2 = new StackADT(maxSize);
+    }
+
+    public boolean isEmpty() {
+        return stack1.isEmpty() && stack2.isEmpty();
+    }
+
+    public boolean isFull() {
+        return stack1.isFull() || stack2.isFull();
+    }
+
+    public void enQueue(String data) {
+        if (isFull()) {
+            System.out.println("Queue is full. Cannot enqueue " + data);
+        } else {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+            stack1.push(data);
+            while (!stack2.isEmpty()) {
+                stack1.push(stack2.pop());
+            }
+        }
+    }
+
+    public String deQueue() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty. Cannot dequeue.");
+            return null;
+        } else {
+            return stack1.pop();
+        }
+    }
+
+    public String peek() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty.");
+            return null;
+        } else {
+            return stack1.peek();
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty.");
+        } else {
+            stack1.display();
+        }
+    }
+
+    public static void main(String[] args) {
+        QueueUsingTwoStacks queue = new QueueUsingTwoStacks(5);
+
+        queue.enQueue("how");
+        queue.enQueue("is");
+        queue.enQueue("going");
+
+        System.out.println("Queue elements:");
+        queue.display();
+
+        System.out.println("Peek element: " + queue.peek());
+
+        queue.deQueue();
+        queue.deQueue();
+
+        queue.display();
+    }
+}
+

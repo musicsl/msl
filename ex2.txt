@@ -1,0 +1,676 @@
+*****************************************************************************************
+doubly linked list
+****************************************************************************************
+class Node {
+    int data;
+    Node prev;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DoublyLinkedListADT {
+    Node head;
+
+    public DoublyLinkedListADT() {
+        this.head = null;
+    }
+
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    public void insertAtFront(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+
+    public void insertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+            newNode.prev = current;
+        }
+    }
+
+    public void insertAtIndex(int data, int index) {
+        if (index < 1 || index > getSize()+1) {
+            System.out.println("Invalid index");
+            return;
+        }
+        if (index == 1) {
+            insertAtFront(data);
+            return;
+        }
+        Node newNode = new Node(data);
+        Node current = head;
+        for (int i = 1; i < index - 1; i++) {
+            current = current.next;
+        }
+        newNode.next = current.next;
+        newNode.prev = current;
+        if (current.next != null) {
+            current.next.prev = newNode;
+        }
+        current.next = newNode;
+    }
+
+    public void deleteAtFront() {
+        if (isEmpty()) {
+            System.out.println("Linked list is empty");
+        } else {
+            if (head.next != null) {
+                head.next.prev = null;
+            }
+            head = head.next;
+        }
+    }
+
+    public void deleteAtEnd() {
+        if (isEmpty()) {
+            System.out.println("Linked list is empty");
+        } else if (head.next == null) {
+            head = null;
+        } else {
+            Node current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.prev.next = null;
+        }
+    }
+
+    public void deleteAtIndex(int index) {
+        if (index < 1 || index > getSize()) {
+            System.out.println("Invalid index");
+            return;
+        }
+        if (index == 1) {
+            deleteAtFront();
+            return;
+        }
+        Node current = head;
+        for (int i = 1; i < index; i++) {
+            current = current.next;
+        }
+        current.prev.next = current.next;
+        if (current.next != null) {
+            current.next.prev = current.prev;
+        }
+    }
+
+    public boolean search(int data) {
+        Node current = head;
+        while (current != null) {
+            if (current.data == data) {
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+
+    public int getSize() {
+        int count = 0;
+        Node current = head;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Linked list is empty");
+        } else {
+            Node current = head;
+            while (current != null) {
+                System.out.print(current.data + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class DoublyLinkedList {
+    public static void main(String[] args) {
+        DoublyLinkedListADT linkedList = new DoublyLinkedListADT();
+
+        linkedList.insertAtFront(3);
+        linkedList.insertAtFront(2);
+        linkedList.insertAtFront(1);
+
+        linkedList.display(); // Output: 1 2 3
+
+        linkedList.insertAtEnd(4);
+        linkedList.insertAtEnd(5);
+
+        linkedList.display(); // Output: 1 2 3 4 5
+
+        linkedList.insertAtIndex(10, 2);
+
+        linkedList.display(); // Output: 1 2 10 3 4 5
+
+        linkedList.deleteAtFront();
+        linkedList.deleteAtEnd();
+
+        linkedList.display(); // Output: 2 10 3 4
+
+        linkedList.deleteAtIndex(2);
+
+        linkedList.display(); // Output: 2 10 4
+    }
+}
+*************************************************************************************************************************
+singly linked list any type
+************************************************************************************************************************
+class Node<T> {
+    T data;
+    Node<T> next;
+
+    public Node(T data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedListADT<T> {
+    Node<T> head;
+
+    public LinkedListADT() {
+        this.head = null;
+    }
+
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    public void insertAtFront(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            newNode.next = head;
+            head = newNode;
+        }
+    }
+
+    public void insertAtEnd(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            Node<T> current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+
+    public void insertAtIndex(T data, int index) {
+        if (index < 1 || index > getSize()+1) {
+            System.out.println("Invalid index");
+            return;
+        }
+
+        if (index == 1) {
+            insertAtFront(data);
+            return;
+        }
+
+        Node<T> newNode = new Node<>(data);
+        Node<T> current = head;
+        int count = 1;
+
+        while (count < index - 1) {
+            current = current.next;
+            count++;
+        }
+
+        newNode.next = current.next;
+        current.next = newNode;
+    }
+
+    public void deleteAtFront() {
+        if (isEmpty()) {
+            System.out.println("Linked list is empty");
+        } else {
+            head = head.next;
+        }
+    }
+
+    public void deleteAtEnd() {
+        if (isEmpty()) {
+            System.out.println("Linked list is empty");
+        } else if (head.next == null) {
+            head = null;
+        } else {
+            Node<T> current = head;
+            Node<T> previous = null;
+            while (current.next != null) {
+                previous = current;
+                current = current.next;
+            }
+            previous.next = null;
+        }
+    }
+
+    public void deleteAtIndex(int index) {
+        if (index < 1 || index > getSize()) {
+            System.out.println("Invalid index");
+            return;
+        }
+
+        if (index == 1) {
+            deleteAtFront();
+            return;
+        }
+
+        Node<T> current = head;
+        int count = =1;
+
+        while (count < index - 1) {
+            current = current.next;
+            count++;
+        }
+
+        current.next = current.next.next;
+    }
+
+    public boolean search(T data) {
+        Node<T> current = head;
+        while (current != null) {
+            if (current.data.equals(data)) {
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+
+    public int getSize() {
+        int count = 0;
+        Node<T> current = head;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Linked list is empty");
+        } else {
+            Node<T> current = head;
+            while (current != null) {
+                System.out.print(current.data + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class SinglyLLAnyType {
+    public static void main(String[] args) {
+        LinkedListADT<Integer> integerList = new LinkedListADT<>();
+        integerList.insertAtFront(3);
+        integerList.insertAtFront(2);
+        integerList.insertAtFront(1);
+
+        integerList.display(); // Output: 1 2 3
+
+        LinkedListADT<String> stringList = new LinkedListADT<>();
+        stringList.insertAtEnd("World");
+        stringList.insertAtFront("Hello");
+		
+		stringList.display(); // Output: Hello World
+		
+		LinkedListADT<Object> anyList = new LinkedListADT<>();
+        anyList.insertAtEnd('N');
+		anyList.insertAtIndex('R', 1);
+		anyList.insertAtIndex(10, 2);
+        anyList.insertAtFront("Hello");
+
+        anyList.display(); // Output: Hello N R 10 
+    }
+}
+*******************************************************************************************************************
+circular linked list
+*******************************************************************************************************************
+class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class CircularLinkedListADT {
+    Node head;
+
+    public CircularLinkedListADT() {
+        this.head = null;
+    }
+
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    public void insertAtFront(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            newNode.next = newNode; // Circular reference to itself
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != head) {
+                current = current.next;
+            }
+            current.next = newNode;
+            newNode.next = head;
+            head = newNode;
+        }
+    }
+
+    public void insertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (isEmpty()) {
+            newNode.next = newNode; // Circular reference to itself
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != head) {
+                current = current.next;
+            }
+            current.next = newNode;
+            newNode.next = head;
+        }
+    }
+
+    public void deleteAtFront() {
+        if (isEmpty()) {
+            System.out.println("Circular linked list is empty");
+            return;
+        }
+        if (head.next == head) { // Only one element in the list
+            head = null;
+        } else {
+            Node current = head;
+            while (current.next != head) {
+                current = current.next;
+            }
+            current.next = head.next;
+            head = head.next;
+        }
+    }
+
+    public void deleteAtEnd() {
+        if (isEmpty()) {
+            System.out.println("Circular linked list is empty");
+            return;
+        }
+        if (head.next == head) { // Only one element in the list
+            head = null;
+        } else {
+            Node current = head;
+            Node previous = null;
+            while (current.next != head) {
+                previous = current;
+                current = current.next;
+            }
+            previous.next = head;
+        }
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Circular linked list is empty");
+            return;
+        }
+        Node current = head;
+        do {
+            System.out.print(current.data + " ");
+            current = current.next;
+        } while (current != head);
+        System.out.println();
+    }
+}
+
+public class CircularLinkedList {
+    public static void main(String[] args) {
+        CircularLinkedListADT circularLinkedList = new CircularLinkedListADT();
+
+        circularLinkedList.insertAtFront(3);
+        circularLinkedList.insertAtFront(2);
+        circularLinkedList.insertAtFront(1);
+
+        circularLinkedList.display(); // Output: 1 2 3
+
+        circularLinkedList.insertAtEnd(4);
+        circularLinkedList.insertAtEnd(5);
+
+        circularLinkedList.display(); // Output: 1 2 3 4 5
+
+        circularLinkedList.deleteAtFront();
+        circularLinkedList.display(); // Output: 2 3 4 5
+
+        circularLinkedList.deleteAtEnd();
+        circularLinkedList.display(); // Output: 2 3 4
+    }
+}
+******************************************************************************************************
+linked list deletion add these to linked list
+******************************************************************************************************
+public class LinkedListDeletion {
+    public static void main(String[] args) {
+        LinkedListADT linkedList = new LinkedListADT();
+
+        linkedList.insertAtEnd(1);
+        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(3);
+        linkedList.insertAtEnd(4);
+        linkedList.insertAtEnd(5);
+
+        System.out.println("Original linked list:");
+        linkedList.display(); // Output: 1 2 3 4 5
+
+        int key = 5;
+        deleteKey(linkedList, key);
+
+        System.out.println("Linked list after deleting key " + key + ":");
+        linkedList.display(); // Output: 1 2 4 5
+    }
+
+    public static void deleteKey(LinkedListADT linkedList, int key) {
+        if (linkedList.isEmpty()) {
+            System.out.println("Linked list is empty");
+            return;
+        }
+
+        if (linkedList.head.data == key) {
+            linkedList.deleteAtFront();
+            return;
+        }
+
+        Node current = linkedList.head;
+        
+        while (current.next != null) {
+            if (current.next.data == key) {
+                current.next = current.next.next;
+                return;
+            }            
+            current = current.next;
+        }
+
+        System.out.println("Key not found in the linked list");
+    }
+}
+***********************************************************************************************
+linked listv generic add these to generic <t>
+***********************************************************************************************
+
+public class LinkedListDeletionGeneric<T> {
+    public static void main(String[] args) {
+		LinkedListDeletionGeneric<Object> del = new LinkedListDeletionGeneric<>();
+        LinkedListADT<Object> linkedList = new LinkedListADT<>();
+
+        linkedList.insertAtEnd("Yes");
+        linkedList.insertAtEnd('O');
+        linkedList.insertAtEnd(3);
+        linkedList.insertAtEnd(4.5);
+        linkedList.insertAtEnd('n');
+
+        System.out.println("Original linked list:");
+        linkedList.display(); // Output: 1 2 3 4 5
+
+        char key = 'O';
+        del.deleteKey(linkedList, key);
+
+        System.out.println("Linked list after deleting key " + key + ":");
+        linkedList.display(); // Output: 1 2 4 5
+    }
+
+    public void deleteKey(LinkedListADT<T> linkedList, T key) {
+        if (linkedList.isEmpty()) {
+            System.out.println("Linked list is empty");
+            return;
+        }
+
+        if (linkedList.head.data == key) {
+            linkedList.deleteAtFront();
+            return;
+        }
+
+        Node<T> current = linkedList.head;
+        Node<T> previous = null;
+
+        while (current != null) {
+            if (current.data == key) {
+                previous.next = current.next;
+                return;
+            }
+            previous = current;
+            current = current.next;
+        }
+
+        System.out.println("Key not found in the linked list");
+    }
+}
+*******************************************************************************************************
+reverse add this class to normal linked list
+*******************************************************************************************************
+public class Reverse {
+	public void reverseLinkedList(LinkedListADT linkedList) {
+		if (linkedList.isEmpty() || linkedList.head.next == null) {
+			return; // Empty list or only one element, no need to reverse
+		}
+
+		Node previous = null;
+		Node current = linkedList.head;
+		Node next = null;
+
+		while (current != null) {
+			next = current.next;
+			current.next = previous;
+			previous = current;
+			current = next;
+		}
+
+		linkedList.head = previous;
+	}
+	
+		
+	public static void main(String[] args) {
+		LinkedListADT linkedList = new LinkedListADT();
+		Reverse r = new Reverse();
+		
+		// Add elements to the linked list
+		linkedList.insertAtFront(1);
+		linkedList.insertAtEnd(2);
+		linkedList.insertAtEnd(3);		
+		
+		// Display the original list
+        System.out.print("Original list: ");
+        linkedList.display(); // Output: Original list: 1 2 3 
+
+        // Reverse the linked list
+        r.reverseLinkedList(linkedList);
+
+        // Display the reversed list
+        System.out.print("Reversed list: ");
+        linkedList.display(); // Output: Reversed list: 3 2 1
+	}
+}
+	
+********************************************************************************************************
+reverse generic add these to <t>
+*********************************************************************************************************
+
+public class ReverseGeneric<T> {
+    public void reverseLinkedList(LinkedListADT<T> linkedList) {
+        if (linkedList.isEmpty() || linkedList.head.next == null) {
+            return; // Empty list or only one element, no need to reverse
+        }
+
+        Node<T> previous = null;
+        Node<T> current = linkedList.head;
+        Node<T> next = null;
+
+        while (current != null) {
+            next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
+        }
+
+        linkedList.head = previous;
+    }
+
+    public static void main(String[] args) {
+        LinkedListADT<Integer> linkedList = new LinkedListADT<>();
+        ReverseGeneric<Integer> r = new ReverseGeneric<>();
+
+        // Add elements to the linked list
+        linkedList.insertAtFront(1);
+        linkedList.insertAtEnd(2);
+        linkedList.insertAtEnd(3);
+
+        // Display the original list
+        System.out.print("Original list: ");
+        linkedList.display(); // Output: Original list: 1 2 3 
+
+        // Reverse the linked list
+        r.reverseLinkedList(linkedList);
+
+        // Display the reversed list
+        System.out.print("Reversed list: ");
+        linkedList.display(); // Output: Reversed list: 3 2 1
+    }
+}
+
+
+
+

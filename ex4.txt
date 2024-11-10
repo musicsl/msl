@@ -1,0 +1,756 @@
+*******************************************
+binary tree array
+********************************************
+public class BinTree_Array {
+    Object[] array;
+
+    // Constructor
+    public BinTree_Array() {
+        array = new Object[128];
+    }
+
+    // Method to check if the tree is empty
+    public boolean empty() {
+        return (array[1] == null);
+    }
+
+    // Method to calculate the left child index of node i
+    public int left(int i) {
+        return 2 * i;
+    }
+
+    // Method to calculate the right child index of node i
+    public int right(int i) {
+        return 2 * i + 1;
+    }
+
+    // Method to calculate the parent index of node i
+    public int parent(int i) {
+        return i / 2;
+    }
+
+    // Method to get the cargo (value) at index i
+    public Object getCargo(int i) {
+        if (i < 0 || i >= array.length) return null;
+        return array[i];
+    }
+
+    // Method to set the cargo (value) at index i, with simple error checking
+    public void setCargo(int i, Object obj) {
+        if (i < 0 || i >= array.length) return;
+        array[i] = obj;
+    }
+
+    // Method to print the contents of the tree in preorder
+    public void printPreorder(int i) {
+        if (getCargo(i) == null) return;
+        System.out.println(getCargo(i));
+        printPreorder(left(i));
+        printPreorder(right(i));
+    }
+
+    public static void main(String[] args) {
+        // Create a new tree
+        BinTree_Array tree = new BinTree_Array();
+
+        // Set cargo (values) for the root and its children
+        int root = 1;
+        tree.setCargo(root, "cargo for root");
+        tree.setCargo(tree.left(root), "cargo for left");
+        tree.setCargo(tree.right(root), "cargo for right");
+
+        // Print the tree in preorder
+        tree.printPreorder(root);
+    }
+}
+********************************************************************************************
+search insert tree construction
+***********************************************************************************************
+public class Tree {
+    Object[] array;
+
+    // Constructor to initialize the array with a default size
+    public Tree() {
+        array = new Object[128];
+    }
+
+    // Constructor to initialize the tree with a root value
+    public Tree(Object rootValue) {
+        this();
+        setRoot(rootValue);
+    }
+
+    // Method to set the root node
+    public void setRoot(Object rootValue) {
+        setCargo(1, rootValue);
+    }
+
+    // Check if the tree is empty (i.e., the root is null)
+    public boolean empty() {
+        return array[1] == null;
+    }
+
+    // Return the index of the left child
+    private int left(int i) {
+        return 2 * i;
+    }
+
+    // Return the index of the right child
+    private int right(int i) {
+        return 2 * i + 1;
+    }
+
+    // Return the index of the parent
+    private int parent(int i) {
+        return i / 2;
+    }
+
+    // Accessor method to get the value of a node by index
+    private Object getCargo(int i) {
+        if (i < 0 || i >= array.length) return null;
+        return array[i];
+    }
+
+    // Accessor method to set the value of a node by index
+    private void setCargo(int i, Object obj) {
+        if (i < 0 || i >= array.length) return;
+        array[i] = obj;
+    }
+
+    // Recursive preorder search for a value in the tree starting at a specific index
+    private int searchPreorder(int index, Object value) {
+        if (index >= array.length || array[index] == null) {
+            return -1;
+        }
+        if (array[index].equals(value)) {
+            return index;
+        }
+        int leftSearch = searchPreorder(left(index), value);
+        if (leftSearch != -1) return leftSearch;
+        int rightSearch = searchPreorder(right(index), value);
+        return rightSearch;
+    }
+
+    // Public method to initiate recursive preorder search starting from the root (index 1)
+    public int searchPreorder(Object value) {
+        return searchPreorder(1, value);
+    }
+
+    // Method to insert a value as the left child of the specified parent using preorder search
+    public boolean insertLeft(Object parentValue, Object newValue) {
+        int parentIndex = searchPreorder(parentValue);
+        if (parentIndex == -1) {
+            System.out.println("Parent value not found!");
+            return false;
+        }
+        int leftIndex = left(parentIndex);
+        if (leftIndex < array.length && array[leftIndex] == null) {
+            setCargo(leftIndex, newValue);
+            return true;
+        } else {
+            System.out.println("Left child already occupied or index out of bounds.");
+            return false;
+        }
+    }
+
+    // Method to insert a value as the right child of the specified parent using preorder search
+    public boolean insertRight(Object parentValue, Object newValue) {
+        int parentIndex = searchPreorder(parentValue);
+        if (parentIndex == -1) {
+            System.out.println("Parent value not found!");
+            return false;
+        }
+        int rightIndex = right(parentIndex);
+        if (rightIndex < array.length && array[rightIndex] == null) {
+            setCargo(rightIndex, newValue);
+            return true;
+        } else {
+            System.out.println("Right child already occupied or index out of bounds.");
+            return false;
+        }
+    }
+
+    // Method to print the tree in preorder traversal
+    public void printPreorder(int i) {
+        if (getCargo(i) == null) return;
+        System.out.println(getCargo(i));
+        printPreorder(left(i));
+        printPreorder(right(i));
+    }
+
+   public static void main(String[] args) {
+        // Create a new tree
+        Tree tree = new Tree("A");
+
+        // Insert according to the given structure
+        tree.insertLeft("A", "B");    // B is left of A
+        tree.insertRight("A", "C");   // C is right of A
+
+        tree.insertLeft("B", "D");    // D is left of B
+        tree.insertLeft("C", "E");    // E is left of C
+        tree.insertRight("C", "F");   // F is right of C
+
+        tree.insertRight("E", "G");   // G is right of E
+        tree.insertLeft("F", "H");    // H is left of F
+        tree.insertRight("F", "I");   // I is right of F
+
+        // Print the tree in preorder traversal
+        System.out.println("Preorder traversal of the tree:");
+        tree.printPreorder(1);
+		
+		
+		
+		// ***** Testing the search method *****
+
+        String searchValue = "H";  // Define the value to search for
+		int foundIndex = tree.searchPreorder(searchValue);
+		if (foundIndex != -1) {
+			System.out.println("'" + searchValue + "' found at index: " + foundIndex);
+		} else {
+			System.out.println("'" + searchValue + "' not found in the tree.");
+		}
+
+		searchValue = "Z";  // Define another value to search for
+		foundIndex = tree.searchPreorder(searchValue);
+		if (foundIndex != -1) {
+			System.out.println("'" + searchValue + "' found at index: " + foundIndex);
+		} else {
+			System.out.println("'" + searchValue + "' not found in the tree.");
+		}
+    }
+}
+***********************************************************************************
+finding maximum
+*************************************************************************************
+// Recursive method to find the maximum value in the tree starting from a specific index
+private Object findMax(int index) {
+    // Base case: if the index is out of bounds or the node is null, return null
+    if (index >= array.length || array[index] == null) return null;
+
+    // Get the value of the current node
+    Object currentMax = array[index];
+
+    // Recursively find the maximum value in the left and right subtrees
+    Object leftMax = findMax(left(index));
+    Object rightMax = findMax(right(index));
+
+    // Compare the current node's value with the maximum values found in the left and right subtrees
+    if (leftMax != null && ((Comparable<Object>) leftMax).compareTo(currentMax) > 0) {
+        currentMax = leftMax;
+    }
+    if (rightMax != null && ((Comparable<Object>) rightMax).compareTo(currentMax) > 0) {
+        currentMax = rightMax;
+    }
+
+    return currentMax;  // Return the maximum value found
+}
+
+// Public method to initiate the max search starting from the root (index 1)
+public Object findMax() {
+    return findMax(1);  // Start the search from the root node (index 1)
+}
+****************************************************************************************
+delete node
+***************************************************************************************
+	Node deleteRec(Node root, int key) {
+        // Base case: tree is empty
+        if (root == null) return root;
+
+        // Recur down the tree to find the node to be deleted
+        if (key < root.key)
+            root.left = deleteRec(root.left, key);
+        else if (key > root.key)
+            root.right = deleteRec(root.right, key);
+        else {
+            // Node with only one child or no child
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+
+            // Node with two children, get the smallest in the right subtree
+            root.key = minValue(root.right);
+
+            // Delete the node used
+            root.right = deleteRec(root.right, root.key);
+        }
+
+        return root;
+    }
+***************************************************************************
+graph adding two elements
+******************************************************************************
+import java.util.ArrayList;
+import java.util.List;
+
+public class TwoDList {
+    public static void main(String[] args) {
+        // Create a 2D list of integers
+        List<List<Integer>> twoDList = new ArrayList<>();
+
+        // Add rows to the 2D list
+        List<Integer> row1 = new ArrayList<>();
+        row1.add(1);
+        row1.add(2);
+        row1.add(3);
+        twoDList.add(row1);
+
+        List<Integer> row2 = new ArrayList<>();
+        row2.add(4);
+        row2.add(5);
+        row2.add(6);
+        twoDList.add(row2);
+
+        List<Integer> row3 = new ArrayList<>();
+        row3.add(7);
+        row3.add(8);
+        row3.add(9);
+        twoDList.add(row3);
+
+        // Print the 2D list
+        System.out.println("2D List:");
+        for (List<Integer> row : twoDList) {
+            System.out.println(row);
+        }
+
+        // Retrieve an element from the 2D list
+        int row = 1;
+        int column = 2;
+        int element = twoDList.get(row).get(column);
+        System.out.println("\nElement at row " + row + ", column " + column + ": " + element);
+
+        // Add a new element to a specific row
+        int newElement = 10;
+        twoDList.get(0).add(newElement);
+        System.out.println("\nAfter adding element " + newElement + " to the first row:");
+        System.out.println(twoDList.get(0));
+    }
+}
+*******************************************************************************************************
+graph adjacent list
+******************************************************************************************************
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+class Graph {
+    private List<List<Integer>> adjacencyList;
+    private int vertices;
+
+    // Constructor to initialize the graph
+    public Graph(int vertices) {
+        this.vertices = vertices;
+        adjacencyList = new ArrayList<>(vertices);
+        
+        for (int i = 0; i < vertices; i++) {
+            adjacencyList.add(new LinkedList<>());
+        }
+    }
+
+    // Method to add an edge between two vertices
+    public void addEdge(int source, int destination) {
+        adjacencyList.get(source).add(destination);
+        adjacencyList.get(destination).add(source); // For undirected graph
+    }
+
+    // Method to display the graph as an adjacency list
+    public void printGraph() {
+        for (int i = 0; i < vertices; i++) {
+            System.out.print("Vertex " + i + ":");
+            for (Integer neighbor : adjacencyList.get(i)) {
+                System.out.print(" -> " + neighbor);
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        int numVertices = 5;
+        Graph graph = new Graph(numVertices);
+
+        // Define edges between vertices
+        graph.addEdge(0, 1);
+        graph.addEdge(0, 4);
+        graph.addEdge(1, 2);
+        graph.addEdge(1, 3);
+        graph.addEdge(1, 4);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 4);
+
+        // Display the adjacency list representation of the graph
+        graph.printGraph();
+    }
+}
+***************************************************************************
+iterative adjcent list
+****************************************************************************
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+
+class Graph {
+    private List<List<Integer>> adjacencyList;
+    private int vertices;
+
+    public Graph(int vertices) {
+        this.vertices = vertices;
+        adjacencyList = new ArrayList<>(vertices);
+        
+        for (int i = 0; i < vertices; i++) {
+            adjacencyList.add(new LinkedList<>());
+        }
+    }
+
+    public void addEdge(int source, int destination) {
+        adjacencyList.get(source).add(destination);
+        adjacencyList.get(destination).add(source);
+    }
+
+    public void printGraph() {
+        for (int i = 0; i < vertices; i++) {
+            System.out.print("Vertex " + i + ":");
+            for (Integer neighbor : adjacencyList.get(i)) {
+                System.out.print(" -> " + neighbor);
+            }
+            System.out.println();
+        }
+    }
+
+    public void DFS(int startVertex) {
+        boolean[] visited = new boolean[vertices];
+        DFSRecursive(startVertex, visited);
+    }
+
+    private void DFSRecursive(int vertex, boolean[] visited) {
+        visited[vertex] = true;
+        System.out.print(vertex + " ");
+        for (Integer neighbor : adjacencyList.get(vertex)) {
+            if (!visited[neighbor]) {
+                DFSRecursive(neighbor, visited);
+            }
+        }
+    }
+
+    public void DFSIterative(int startVertex) {
+        boolean[] visited = new boolean[vertices];
+        Stack<Integer> stack = new Stack<>();
+        stack.push(startVertex);
+        visited[startVertex] = true;
+
+        while (!stack.isEmpty()) {
+            int v = stack.peek();
+            boolean hasUnvisitedNeighbor = false;
+            for (Integer neighbor : adjacencyList.get(v)) {
+                if (!visited[neighbor]) {
+                    stack.push(neighbor);
+                    visited[neighbor] = true;
+					System.out.print(v + " ");
+                    hasUnvisitedNeighbor = true;
+                    break;
+                }
+            }
+            if (!hasUnvisitedNeighbor) {
+                stack.pop();
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        int numVertices = 5;
+        Graph graph = new Graph(numVertices);
+        graph.addEdge(0, 1);
+        graph.addEdge(0, 4);
+        graph.addEdge(1, 2);
+        graph.addEdge(1, 3);
+        graph.addEdge(1, 4);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 4);
+        graph.printGraph();
+        System.out.print("DFS traversal (recursive) starting from vertex 0: ");
+        graph.DFS(0);
+        System.out.println();
+        System.out.print("DFS traversal (iterative) starting from vertex 0: ");
+        graph.DFSIterative(0);
+    }
+}
+********************************************************************************
+adjacnety matrix based implementation
+********************************************************************************
+public class Graph_AdjMatrix {
+    private int[][] adjacencyMatrix;
+    private int numVertices;
+	
+    private boolean[] visited;
+
+    public Graph_AdjMatrix(int numVertices) {
+        this.numVertices = numVertices;
+        adjacencyMatrix = new int[numVertices][numVertices];
+        visited = new boolean[numVertices];
+    }
+
+    public void addEdge(int source, int destination) {
+        adjacencyMatrix[source][destination] = 1;
+        adjacencyMatrix[destination][source] = 1; // For undirected graph
+    }
+
+
+    // Method to display the adjacency matrix
+    public void displayMatrix() {
+        System.out.println("Adjacency Matrix:");
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                System.out.print(adjacencyMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        int numVertices = 5;
+
+        Graph_AdjMatrix graph = new Graph_AdjMatrix(numVertices);
+
+        graph.addEdge(0, 1);
+        graph.addEdge(0, 4);
+        graph.addEdge(1, 2);
+        graph.addEdge(1, 3);
+        graph.addEdge(1, 4);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 4);
+
+        // Display the adjacency matrix
+        graph.displayMatrix();
+
+    }
+}
+*******************************************************************************************
+recursive and iteration on dfs
+***************************************************************************************
+mport java.util.Stack;
+
+
+
+public class Graph {
+
+    private int[][] adjacencyMatrix;
+
+    private boolean[] visited;
+
+    private int numVertices;
+
+
+
+    public Graph(int numVertices) {
+
+        this.numVertices = numVertices;
+
+        adjacencyMatrix = new int[numVertices][numVertices];
+
+        visited = new boolean[numVertices];
+
+    }
+
+
+
+    public void addEdge(int source, int destination) {
+
+        adjacencyMatrix[source][destination] = 1;
+
+        adjacencyMatrix[destination][source] = 1; // For undirected graph
+
+    }
+
+
+
+    // Iterative DFS method 
+
+    public void DFSIterative(int startVertex) {
+
+        
+
+        visited = new boolean[numVertices];
+
+
+
+        Stack<Integer> stack = new Stack<>();
+
+        stack.push(startVertex);
+
+        visited[startVertex] = true;
+
+        System.out.println("Visited vertex (Iterative): " + startVertex);
+
+
+
+        while (!stack.isEmpty()) {
+
+            int vertex = stack.peek();
+
+
+
+            // Check for unvisited neighbours
+
+            boolean foundNeighbour = false;
+
+            for (int i = 0; i < numVertices; i++) {
+
+                if (adjacencyMatrix[vertex][i] == 1 && !visited[i]) {
+
+                    stack.push(i);
+
+                    visited[i] = true;
+
+                    System.out.println("Visited vertex (Iterative): " + i);
+
+                    foundNeighbour = true;
+
+                    break;
+
+                }
+
+            }
+
+
+
+            // If no unvisited neighbours are found, pop the vertex
+
+            if (!foundNeighbour) {
+
+                stack.pop();
+
+            }
+
+        }
+
+    }
+
+
+
+    // Recursive DFS method
+
+    public void DFSRecursive(int vertex) {
+
+        // Mark the vertex as visited
+
+        visited[vertex] = true;
+
+        System.out.println("Visited vertex (Recursive): " + vertex);
+
+
+
+        // Recursively visit all unvisited neighbours
+
+        for (int i = 0; i < numVertices; i++) {
+
+            if (adjacencyMatrix[vertex][i] == 1 && !visited[i]) {
+
+                DFSRecursive(i);
+
+            }
+
+        }
+
+    }
+
+
+
+    public void displayMatrix() {
+
+        System.out.println("Adjacency Matrix:");
+
+        for (int i = 0; i < numVertices; i++) {
+
+            for (int j = 0; j < numVertices; j++) {
+
+                System.out.print(adjacencyMatrix[i][j] + " ");
+
+            }
+
+            System.out.println();
+
+        }
+
+    }
+
+
+
+    public static void main(String[] args) {
+
+        int numVertices = 5;
+
+
+
+        Graph graph = new Graph(numVertices);
+
+
+
+        graph.addEdge(0, 1);
+
+        graph.addEdge(0, 4);
+
+        graph.addEdge(1, 2);
+
+        graph.addEdge(1, 3);
+
+        graph.addEdge(1, 4);
+
+        graph.addEdge(2, 3);
+
+        graph.addEdge(3, 4);
+
+
+
+        // Display the adjacency matrix
+
+        graph.displayMatrix();
+
+
+
+        // Perform Recursive DFS starting from vertex 0
+
+        //System.out.println("\nDepth-First Search (Recursive) starting from vertex 0:");
+
+        //graph.DFSRecursive(0);
+
+
+
+        // Perform Iterative DFS starting from vertex 0
+
+        System.out.println("\nDepth-First Search (Iterative) starting from vertex 0:");
+
+        graph.DFSIterative(0);
+
+    }
+
+}
+******************************************************************************************
+merege sort
+***************************************************************************************
+public class SumRuntimeExample {
+    public static void main(String[] args) {
+        int n = 1000000;  // Adjust 'n' to the desired number
+        long sum = 0;
+
+        // Start time
+        long startTime = System.nanoTime();
+
+        // Sum of n numbers
+        for (int i = 1; i <= n; i++) {
+            sum += i;
+        }
+
+        // End time
+        long endTime = System.nanoTime();
+
+        // Calculate runtime
+        long duration = endTime - startTime; // Time in nanoseconds
+        System.out.println("Sum of first " + n + " numbers is: " + sum);
+        System.out.println("Execution time in nanoseconds: " + duration);
+        System.out.println("Execution time in milliseconds: " + (duration / 1_000_000.0));
+    }
+}
