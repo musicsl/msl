@@ -1,0 +1,39 @@
+
+
+MariaDB [school]> select * from accident where date between '2009-01-01' AND '2009-12-31';
++------------+----------+---------------+
+| date       | driverId | damage_amount |
++------------+----------+---------------+
+| 2009-08-08 |       11 |            40 |
+| 2009-10-19 |       14 |           100 |
++------------+----------+---------------+
+2 rows in set (0.001 sec)
+
+
+MariaDB [school]> select * from accident where date between '2009-01-01' and
+ '2009-01-31';
+Empty set (0.001 sec)
+
+MariaDB [school]> select accident.date, accident.driverID, accident.damage_amount from accident
+    -> join driver on accident.driverId = driver.driverId
+    -> join person on person.personId = driver.personId
+    -> where person.name = 'Smith';
++------------+----------+---------------+
+| date       | driverID | damage_amount |
++------------+----------+---------------+
+| 2009-10-15 |       10 |           150 |
++------------+----------+---------------+
+1 row in set (0.001 sec)
+
+MariaDB [school]>
+
+MariaDB [school]> select sum(damage_amount) from accident
+    -> join driver on accident.driverId = driver.driverId
+    -> join person on person.personId = driver.personId
+    -> where person.name = 'Smith';
++--------------------+
+| sum(damage_amount) |
++--------------------+
+|                150 |
++--------------------+
+1 row in set (0.001 sec)
